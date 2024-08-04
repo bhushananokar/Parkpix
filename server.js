@@ -13,11 +13,11 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // Initialize Firebase Admin SDK
-const serviceAccount = require('./parking-project-309c3-firebase-adminsdk-ix0ws-1bb1099dd7.json');
+const serviceAccount = require('./'); // your firebase admin sdk 
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: 'parking-project-309c3.appspot.com'
+  storageBucket: 'Your-project-id.appspot.com'
 });
 
 const app = express();
