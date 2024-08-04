@@ -6,18 +6,18 @@ import cv2
 import numpy as np
 
 # Firebase initialization
-cred = credentials.Certificate(r'C:\Users\Bhushan\Desktop\sender\parking-project-309c3-firebase-adminsdk-ix0ws-1bb1099dd7 (1).json')
+cred = credentials.Certificate("")# path to your firebase admin sdk  
 firebase_admin.initialize_app(cred, {
-    'storageBucket': 'parking-project-309c3.appspot.com'
+    'storageBucket': 'Your project name.appspot.com'
 })
 bucket = storage.bucket()
 
 app = Flask(__name__)
 
 # Load YOLOv3 network
-yolo_config_path = r"C:\Users\Bhushan\Downloads\projectparking\projectparking\yolov3.cfg"
-yolo_weights_path = r"C:\Users\Bhushan\Downloads\projectparking\projectparking\yolov3.weights"
-yolo_names_path = r"C:\Users\Bhushan\Downloads\projectparking\projectparking\coco.names"
+yolo_config_path = r"yolov3.cfg"
+yolo_weights_path = r"yolov3.weights"
+yolo_names_path = r"coco.names"
 
 net = cv2.dnn.readNetFromDarknet(yolo_config_path, yolo_weights_path)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
@@ -29,13 +29,13 @@ with open(yolo_names_path, 'rt') as f:
 layer_names = net.getLayerNames()
 output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()]
 
-# Function to get image files from Firebase Storage
+
 def get_image_files():
     blobs = bucket.list_blobs(prefix='webcam_frames/')
     image_files = [blob.name for blob in blobs]
     return sorted(image_files)
 
-# Function to detect objects (only humans and vehicles)
+
 def detect_objects(img):
     height, width = img.shape[:2]
     blob = cv2.dnn.blobFromImage(img, 1/255.0, (416, 416), swapRB=True, crop=False)
@@ -47,7 +47,7 @@ def detect_objects(img):
     class_ids = []
 
     # Class IDs for humans and vehicles
-    target_classes = [0, 1, 2, 3, 5, 7]
+    target_classes = [0, 1, 2, 3, 5, 7]# change as per objects you need to detect , refer coco.names for IDs
 
     for output in detections:
         for detection in output:
@@ -76,12 +76,12 @@ def detect_objects(img):
             cv2.putText(img, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
             object_count += 1
 
-    # Overlay object count on the image
+ 
     cv2.putText(img, f"Object Count: {object_count}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
     return img
 
-# Function to generate video feed
+
 def generate():
     image_files = get_image_files()
     for image_file in image_files:
@@ -99,16 +99,16 @@ def generate():
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
-# Route for video feed
+
 @app.route('/video_feed')
 def video_feed():
     return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-# Route for the index page
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Run Flask application
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
