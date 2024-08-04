@@ -8,16 +8,16 @@ import numpy as np
 # Firebase initialization
 cred = credentials.Certificate("")# path to your firebase admin sdk  
 firebase_admin.initialize_app(cred, {
-    'storageBucket': 'Your project name.appspot.com'
+    'storageBucket': 'Your-project-id.appspot.com'
 })
 bucket = storage.bucket()
 
 app = Flask(__name__)
 
 # Load YOLOv3 network
-yolo_config_path = r"yolov3.cfg"
-yolo_weights_path = r"yolov3.weights"
-yolo_names_path = r"coco.names"
+yolo_config_path = "yolov3.cfg"
+yolo_weights_path = "yolov3.weights"
+yolo_names_path = "coco.names"
 
 net = cv2.dnn.readNetFromDarknet(yolo_config_path, yolo_weights_path)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
