@@ -28,20 +28,18 @@ This project demonstrates how to use YOLOv3 (You Only Look Once) for real-time o
 - Firebase Admin SDK
 - YOLOv3 weights and configuration files
 
-install dependancies:
+## Install dependancies:
 pip install flask opencv-python firebase-admin numpy
 
-Download YOLOv3 files:
-
+## Download YOLOv3 files:
 Download yolov3.cfg, yolov3.weights, and coco.names from the YOLO website and place them in the project director
 
-Configure Firebase:
+## Configure Firebase:
 Obtain your Firebase Admin SDK JSON file and replace the placeholder in app.py:
 cred = credentials.Certificate('path/to/your/firebase-adminsdk.json')
 Replace 'Your-project-id.appspot.com' with your actual Firebase Storage bucket URL.
 
-Configure the Image Capture Script:
-
+## Configure the Image Capture Script:
 Update the URL in espsender.py with the URL of your image source:
 url = 'http://your-camera-ip/cam-hi.jpg'
 Replace 'path/to/your/firebase-adminsdk.json' and 'Your-project-id.appspot.com' with your actual values.
